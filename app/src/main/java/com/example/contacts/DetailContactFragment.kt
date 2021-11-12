@@ -2,13 +2,16 @@ package com.example.contacts
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import com.example.contacts.databinding.FragmentDetailContactBinding
 
 class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
+
+    private lateinit var contact: Contact
 
     companion object {
         const val EXTRA_CONTACT_ID = "EXTRA CONTACT ID"
@@ -27,25 +30,28 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
         val binding = FragmentDetailContactBinding.bind(view)
 
         arguments.let {
-
             val contactId = arguments?.getString(EXTRA_CONTACT_ID, "0")
-            val contact = Repository.listOfContacts.single {
+            contact = Repository.listOfContacts.single {
                 it.id == contactId
             }
 
             val number = view.findViewById<TextView>(R.id.detailNumber) as TextView
             val name = view.findViewById<TextView>(R.id.detailName) as TextView
             val lastName = view.findViewById<TextView>(R.id.detailLastName) as TextView
-//            binding.apply {
-//                detailNumber.text = contact.number
-//                detailName.text = contact.firstName
-//                detailLastName.text = contact.lastName
-//            }
 
             number.text = contact.number
             name.text = contact.firstName
             lastName.text = contact.lastName
         }
-    }
 
+        binding.fab.setOnClickListener {
+            contact.firstName = binding.detailName.text.toString()
+            contact.lastName = binding.detailLastName.text.toString()
+            contact.number = binding.detailNumber.text.toString()
+
+            Toast.makeText(activity, "Changes are saved", Toast.LENGTH_SHORT).show()
+
+            parentFragmentManager.popBackStack()
+        }
+    }
 }
