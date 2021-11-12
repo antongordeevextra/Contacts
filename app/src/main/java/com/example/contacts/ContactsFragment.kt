@@ -1,14 +1,18 @@
 package com.example.contacts
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.commit
+import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class ContactsFragment : Fragment() {
+class ContactsFragment : Fragment(), ContactListAdapter.ContactListListener {
 
     private lateinit var recyclerView: RecyclerView
 
@@ -26,7 +30,7 @@ class ContactsFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.listRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = ContactListAdapter(list)
+        recyclerView.adapter = ContactListAdapter(list, this)
 
     }
 
@@ -37,5 +41,13 @@ class ContactsFragment : Fragment() {
 
                 }
             }
+    }
+
+    override fun listItemClicked(contactId: String) {
+        val fragment = DetailContactFragment.newInstance(contactId)
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragment_container, fragment)
+        fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.commit()
     }
 }

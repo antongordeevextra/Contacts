@@ -6,7 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ContactListAdapter(private val contacts: List<Contact>) : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
+class ContactListAdapter(private val contacts: ArrayList<Contact>, private val clickListener: ContactListListener) : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
+
+    interface ContactListListener {
+        fun listItemClicked(contactId: String)
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private lateinit var contact: Contact
@@ -32,6 +36,10 @@ class ContactListAdapter(private val contacts: List<Contact>) : RecyclerView.Ada
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(contacts[position])
+
+        holder.itemView.setOnClickListener {
+            clickListener.listItemClicked(contacts[position].id)
+        }
     }
 
     override fun getItemCount() = contacts.size
