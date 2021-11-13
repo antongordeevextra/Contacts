@@ -7,6 +7,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import androidx.recyclerview.widget.RecyclerView
 import com.example.contacts.databinding.FragmentDetailContactBinding
 
 class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
@@ -45,6 +46,7 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
         }
 
         binding.fab.setOnClickListener {
+
             contact.firstName = binding.detailName.text.toString()
             contact.lastName = binding.detailLastName.text.toString()
             contact.number = binding.detailNumber.text.toString()
