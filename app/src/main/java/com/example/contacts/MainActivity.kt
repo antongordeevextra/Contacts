@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), Abstraction {
         }
     }
 
-    override fun launchSecondFragment(contactId: String) {
+    override fun launchSecondFragment(contactId: Int) {
         if (findViewById<FrameLayout>(R.id.fragment_container_2) != null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_2, DetailContactFragment.newInstance(contactId))

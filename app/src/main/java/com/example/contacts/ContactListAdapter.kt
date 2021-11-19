@@ -1,37 +1,38 @@
 package com.example.contacts
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.contacts.databinding.ContactListItemBinding
 
-class ContactListAdapter(private val contacts: ArrayList<Contact>, private val clickListener: ContactListListener) : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
+class ContactListAdapter(
+    private val clickListener: ContactListListener
+) : RecyclerView.Adapter<ContactListAdapter.ViewHolder>() {
 
-    interface ContactListListener {
-        fun listItemClicked(contactId: String)
-    }
+    private val diffCallback = object : DiffUtil.ItemCallback<Contact>() {
+        override fun areItemsTheSame(oldItem: Contact, newItem: Contact): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private lateinit var contact: Contact
-
-        fun bind(contact: Contact) {
-            this.contact = contact
-            val number = itemView.findViewById<TextView>(R.id.number) as TextView
-            val name = itemView.findViewById<TextView>(R.id.name) as TextView
-            val lastName = itemView.findViewById<TextView>(R.id.lastName) as TextView
-
-            number.text = contact.number
-            name.text = contact.firstName
-            lastName.text = contact.lastName
+        override fun areContentsTheSame(oldItem: Contact, newItem: Contact): Boolean {
+            return oldItem == newItem
         }
     }
 
+    private val differ = AsyncListDiffer(this, diffCallback)
+
+    var contacts: List<Contact>
+        get() = differ.currentList
+        set(value) = differ.submitList(value)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.contact_list_item, parent, false)
-        )
+        val binding = ContactListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -40,6 +41,30 @@ class ContactListAdapter(private val contacts: ArrayList<Contact>, private val c
         holder.itemView.setOnClickListener {
             clickListener.listItemClicked(contacts[position].id)
         }
+    }
+
+    inner class ViewHolder(private val binding: ContactListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(contact: Contact) {
+            binding.apply {
+                number.text = contact.number
+                name.text = contact.firstName
+                lastName.text = contact.lastName
+
+                Glide.with(itemView)
+                    .load(contact.photo)
+                    .circleCrop()
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .placeholder(R.drawable.ic_baseline_person_24)
+                    .error(R.drawable.ic_baseline_error_24)
+                    .into(image)
+            }
+        }
+    }
+
+    interface ContactListListener {
+        fun listItemClicked(contactId: Int)
     }
 
     override fun getItemCount() = contacts.size

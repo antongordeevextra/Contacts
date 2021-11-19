@@ -7,39 +7,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.fragment.app.setFragmentResult
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contacts.databinding.FragmentContactsBinding
 import com.example.contacts.databinding.FragmentDetailContactBinding
 
-class ContactsFragment : Fragment(), ContactListAdapter.ContactListListener {
+class ContactsFragment : Fragment(R.layout.fragment_contacts), ContactListAdapter.ContactListListener {
 
-    private lateinit var adapter: ContactListAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contacts, container, false)
-    }
+    private lateinit var binding: FragmentContactsBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentContactsBinding.bind(view)
+
+        setupRV()
+    }
+
+    private fun setupRV() {
         val list = Repository.listOfContacts
-        val binding = FragmentContactsBinding.bind(view)
 
-        binding.listRecyclerView.layoutManager = LinearLayoutManager(activity)
-        adapter = ContactListAdapter(list, this)
+        val adapter = ContactListAdapter(this)
         binding.listRecyclerView.adapter = adapter
+        adapter.contacts = list
 
-        binding.swiperefresh.setOnRefreshListener {
-            binding.swiperefresh.isRefreshing = false
-            adapter.notifyDataSetChanged()
+        resources.getDimensionPixelSize(R.dimen.card_margin).let {
+            SpacingItemDecoration(it).let { spacing ->
+                binding.listRecyclerView.addItemDecoration(spacing)
+            }
         }
     }
 
@@ -51,7 +51,7 @@ class ContactsFragment : Fragment(), ContactListAdapter.ContactListListener {
             }
     }
 
-    override fun listItemClicked(contactId: String) {
+    override fun listItemClicked(contactId: Int) {
         listen().launchSecondFragment(contactId)
     }
 }

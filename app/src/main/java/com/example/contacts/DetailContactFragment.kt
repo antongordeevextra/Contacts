@@ -17,10 +17,10 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
     companion object {
         const val EXTRA_CONTACT_ID = "EXTRA CONTACT ID"
 
-        fun newInstance(contactId: String) =
+        fun newInstance(contactId: Int) =
             DetailContactFragment().apply {
                 arguments = Bundle().apply {
-                    putString(EXTRA_CONTACT_ID, contactId)
+                    putInt(EXTRA_CONTACT_ID, contactId)
                 }
             }
     }
@@ -31,7 +31,7 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
         val binding = FragmentDetailContactBinding.bind(view)
 
         arguments.let {
-            val contactId = arguments?.getString(EXTRA_CONTACT_ID, "0")
+            val contactId = arguments?.getInt(EXTRA_CONTACT_ID, 0)
             contact = Repository.listOfContacts.single {
                 it.id == contactId
             }

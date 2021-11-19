@@ -1,12 +1,24 @@
 package com.example.contacts
 
+import com.github.javafaker.Faker
+
 class Repository {
 
     companion object {
-        var listOfContacts = arrayListOf<Contact>(
-            Contact("Anton", "Gordeev", "9817868437", "0"),
-            Contact("Ekaterina", "Olegovich", "9817868422", "1"),
-            Contact("Svetlana", "Popovich", "981786822", "2")
-        )
+        var listOfContacts = arrayListOf<Contact>()
+
+        init {
+            val faker = Faker.instance()
+
+            listOfContacts = (1..100).map{
+                Contact(
+                    id = it,
+                    firstName = faker.name().firstName(),
+                    lastName = faker.name().lastName(),
+                    number = faker.phoneNumber().phoneNumber(),
+                    photo = "https://picsum.photos/500"
+                )
+            } as ArrayList<Contact>
+        }
     }
 }

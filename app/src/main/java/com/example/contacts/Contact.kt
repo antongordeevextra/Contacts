@@ -5,5 +5,6 @@ data class Contact (
     var firstName : String,
     var lastName : String,
     var number : String,
-    val id : String,
+    val id : Int,
+    val photo: String
 )
