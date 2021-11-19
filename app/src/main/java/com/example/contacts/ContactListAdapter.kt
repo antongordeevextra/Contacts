@@ -1,5 +1,7 @@
 package com.example.contacts
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -36,10 +38,19 @@ class ContactListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(contacts[position])
+        val contact = contacts[position]
+        holder.bind(contact)
 
         holder.itemView.setOnClickListener {
-            clickListener.listItemClicked(contacts[position].id)
+            clickListener.listItemClicked(contact.id)
+        }
+
+        holder.itemView.setOnLongClickListener {
+
+            createAndShowDialog(holder.itemView.context,
+            R.string.delete_question,
+            onPositiveAction = {clickListener.deleteContact(contact)})
+            return@setOnLongClickListener true
         }
     }
 
@@ -65,6 +76,7 @@ class ContactListAdapter(
 
     interface ContactListListener {
         fun listItemClicked(contactId: Int)
+        fun deleteContact(contact: Contact)
     }
 
     override fun getItemCount() = contacts.size

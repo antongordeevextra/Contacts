@@ -21,6 +21,7 @@ import com.example.contacts.databinding.FragmentDetailContactBinding
 class ContactsFragment : Fragment(R.layout.fragment_contacts), ContactListAdapter.ContactListListener {
 
     private lateinit var binding: FragmentContactsBinding
+    private val adapter = ContactListAdapter(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,7 +33,7 @@ class ContactsFragment : Fragment(R.layout.fragment_contacts), ContactListAdapte
     private fun setupRV() {
         val list = Repository.listOfContacts
 
-        val adapter = ContactListAdapter(this)
+
         binding.listRecyclerView.adapter = adapter
         adapter.contacts = list
 
@@ -53,5 +54,10 @@ class ContactsFragment : Fragment(R.layout.fragment_contacts), ContactListAdapte
 
     override fun listItemClicked(contactId: Int) {
         listen().launchSecondFragment(contactId)
+    }
+
+    override fun deleteContact(contact: Contact) {
+        Repository.deleteContact(contact)
+        adapter.contacts = Repository.listOfContacts
     }
 }

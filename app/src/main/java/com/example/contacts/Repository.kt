@@ -20,5 +20,13 @@ class Repository {
                 )
             } as ArrayList<Contact>
         }
+
+        fun deleteContact(contact: Contact){
+            val indexOfContact = listOfContacts.indexOfFirst { it.id == contact.id }
+            if(indexOfContact != - 1) {
+                listOfContacts = ArrayList(listOfContacts)
+                listOfContacts.removeAt(indexOfContact)
+            }
+        }
     }
 }
