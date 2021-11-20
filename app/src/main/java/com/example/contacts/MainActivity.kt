@@ -3,6 +3,8 @@ package com.example.contacts
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
+import com.example.contacts.ui.ContactsFragment
+import com.example.contacts.ui.DetailContactFragment
 
 class MainActivity : AppCompatActivity(), Abstraction {
 

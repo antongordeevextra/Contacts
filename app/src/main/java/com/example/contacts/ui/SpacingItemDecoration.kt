@@ -1,4 +1,4 @@
-package com.example.contacts
+package com.example.contacts.ui
 
 import android.graphics.Rect
 import android.view.View

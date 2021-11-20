@@ -1,5 +1,6 @@
-package com.example.contacts
+package com.example.contacts.data
 
+import com.example.contacts.model.Contact
 import com.github.javafaker.Faker
 
 class Repository {

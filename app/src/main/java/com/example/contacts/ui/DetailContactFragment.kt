@@ -1,16 +1,16 @@
-package com.example.contacts
+package com.example.contacts.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.contacts.R
+import com.example.contacts.data.Repository
 import com.example.contacts.databinding.FragmentDetailContactBinding
+import com.example.contacts.model.Contact
+import com.example.contacts.utils.useGlide
 
 class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
 
@@ -46,14 +46,9 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
             name.text = contact.firstName
             lastName.text = contact.lastName
 
-            Glide.with(view.context)
-                .load(contact.photo)
-                .circleCrop()
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .placeholder(R.drawable.ic_baseline_person_24)
-                .error(R.drawable.ic_baseline_error_24)
-                .into(binding.imageViewDetail)
+            useGlide(view.context,
+            contact.photo,
+            binding.imageViewDetail)
         }
 
         binding.fab.setOnClickListener {

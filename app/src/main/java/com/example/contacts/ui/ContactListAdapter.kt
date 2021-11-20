@@ -1,15 +1,15 @@
-package com.example.contacts
+package com.example.contacts.ui
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.contacts.R
+import com.example.contacts.utils.createAndShowDialog
 import com.example.contacts.databinding.ContactListItemBinding
+import com.example.contacts.model.Contact
+import com.example.contacts.utils.useGlide
 
 class ContactListAdapter(
     private val clickListener: ContactListListener
@@ -62,14 +62,9 @@ class ContactListAdapter(
                 name.text = contact.firstName
                 lastName.text = contact.lastName
 
-                Glide.with(itemView)
-                    .load(contact.photo)
-                    .circleCrop()
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .placeholder(R.drawable.ic_baseline_person_24)
-                    .error(R.drawable.ic_baseline_error_24)
-                    .into(image)
+                useGlide(itemView.context,
+                contact.photo,
+                image)
             }
         }
     }
